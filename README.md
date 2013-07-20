@@ -6,15 +6,11 @@ TODO: Write a gem description
 
 Add this line to your application's Gemfile:
 
-    gem 'ssearch'
+    gem 'ssearch', github: 'ch1c0t/ssearch'
 
 And then execute:
 
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install ssearch
+    $ bundle install
 
 ## Usage
 
