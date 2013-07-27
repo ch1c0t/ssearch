@@ -9,7 +9,7 @@ class Ssearch
     redis:      Redis.new,
     segmenter:  -> string { string.split /\s+|\b/ },
     ngram_size: 4)
-    @segmenter, @ngram_size = segmenter, ngram_size
+    @redis, @segmenter, @ngram_size = redis, segmenter, ngram_size
     Index.const_set :R, redis
 
     @indexes = []
@@ -34,5 +34,9 @@ class Ssearch
     end
 
     @indexes[index].find *tokens
+  end
+
+  def flush
+    @redis.flushdb
   end
 end
