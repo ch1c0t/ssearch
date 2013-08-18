@@ -1,6 +1,6 @@
 require_relative './spec_helper'
 
-ssearch = Ssearch.new 'ssearch'
+ssearch = Ssearch.new 
 
 file = Pathname.new './spec/sentences.data'
 lines = file.readlines

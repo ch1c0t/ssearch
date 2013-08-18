@@ -5,15 +5,13 @@ require "ssearch/token_former"
 require "ssearch/index"
 
 class Ssearch
-  def initialize( name,
-    redis:      Redis.new,
-    segmenter:  -> string { string.split /\s+|\b/ },
-    ngram_size: 4)
-    @redis, @segmenter, @ngram_size = redis, segmenter, ngram_size
-    Index.const_set :R, redis
+  def initialize( segmenter:  -> string { string.split /\s+|\b/ },
+                  redis_port: 6379,
+                  ngram_size: 4)
+    @ngram_size, @redis_port, @segmenter = ngram_size, redis_port, segmenter
 
     @indexes = []
-    @ngram_size.times { |size| @indexes << Index.new(name, size) }
+    @ngram_size.times { |size| @indexes << Index.new(redis_port, size) }
   end
 
   def add string, id
@@ -37,6 +35,6 @@ class Ssearch
   end
 
   def flush
-    @redis.flushdb
+    Redis.new(port: @redis_port).flushall
   end
 end
