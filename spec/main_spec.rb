@@ -23,4 +23,8 @@ describe 'find' do
   it 'returns trigram ids' do
     assert ssearch.find('the personal search') == ["34"]
   end
+
+  it 'returns empty array as empty string prompted' do
+    assert ssearch.find('') == []
+  end
 end

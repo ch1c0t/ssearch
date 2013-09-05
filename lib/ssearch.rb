@@ -23,12 +23,16 @@ class Ssearch
   def find substring
     unigrams = @segmenter.call substring
     
-    index, tokens = if unigrams.size <= @ngram_size
-      size = unigrams.size - 1
-      tokens = TokenFormer.form from: unigrams, size: size
-      [size, tokens]
+    if unigrams.empty?
+      return []
     else
-      [0, unigrams]
+      index, tokens = if unigrams.size <= @ngram_size
+        size = unigrams.size - 1
+        tokens = TokenFormer.form from: unigrams, size: size
+        [size, tokens]
+      else
+        [0, unigrams]
+      end
     end
 
     @indexes[index].find *tokens
