@@ -6,12 +6,12 @@ require "ssearch/index"
 
 class Ssearch
   def initialize( segmenter:  -> string { string.split /\s+|\b/ },
-                  redis_port: 6379,
+                  port:       6379,
                   ngram_size: 4)
-    @ngram_size, @redis_port, @segmenter = ngram_size, redis_port, segmenter
+    @ngram_size, @port, @segmenter = ngram_size, port, segmenter
 
     @indexes = []
-    @ngram_size.times { |size| @indexes << Index.new(redis_port, size) }
+    @ngram_size.times { |size| @indexes << Index.new(port, size) }
   end
 
   def add string, id
@@ -39,6 +39,6 @@ class Ssearch
   end
 
   def flush
-    Redis.new(port: @redis_port).flushall
+    Redis.new(port: @port).flushall
   end
 end
