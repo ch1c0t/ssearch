@@ -3,12 +3,15 @@ require 'redis'
 require "ssearch/version"
 require "ssearch/token_former"
 require "ssearch/index"
+require "ssearch/trie"
 
 class Ssearch
+  attr_reader :trie
   def initialize( segmenter:  -> string { string.split /\s+|\b/ },
                   port:       6379,
                   ngram_size: 4)
     @ngram_size, @port, @segmenter = ngram_size, port, segmenter
+    @trie = Trie.new :port => port, :ngram_size => ngram_size
 
     @indexes = []
     @ngram_size.times { |size| @indexes << Index.new(port, size) }
