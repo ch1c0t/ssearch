@@ -5,7 +5,7 @@ class Ssearch
     end
 
     def prefix string
-      @r.keys(string + '*')
+      @r.keys(string + "*")
     end
   end
 end
