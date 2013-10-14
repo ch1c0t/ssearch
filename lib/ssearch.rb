@@ -11,7 +11,7 @@ class Ssearch
                   port:       6379,
                   ngram_size: 4)
     @ngram_size, @port, @segmenter = ngram_size, port, segmenter
-    @trie = Trie.new :port => port, :ngram_size => ngram_size
+    @trie = Trie.new port, ngram_size
 
     @indexes = []
     @ngram_size.times { |size| @indexes << Index.new(port, size) }

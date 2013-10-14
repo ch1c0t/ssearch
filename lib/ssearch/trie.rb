@@ -1,11 +1,12 @@
 class Ssearch
   class Trie
-    def initialize args = {}
-      @r = Redis.new :port => args[:port]
+    def initialize port, ngram_size
+      @dbs = []
+      ngram_size.times { |size| @dbs << Redis.new(port: port, db: size) }
     end
 
     def prefix string
-      @r.keys(string + "*")
+      @dbs.first.keys(string + "*")
     end
   end
 end
