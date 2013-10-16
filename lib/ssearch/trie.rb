@@ -6,7 +6,12 @@ class Ssearch
     end
 
     def prefix string
-      @dbs.first.keys(string + "*")
+      response = []
+      @dbs.each do |db|
+        response = response + db.keys(string + "*")
+      end
+
+      response
     end
   end
 end

@@ -5,7 +5,8 @@ trie = seed_test_ssearch.trie
 describe Ssearch::Trie do
   describe '#prefix' do
     it 'returns array of node strings' do
-      trie.prefix('ab').must_equal ["above", "able"]
+      expected = ["above", "able", "above .", "able to", "able to classify", "able to build", "able to classify new", "able to build systems"]
+      trie.prefix('ab').must_equal expected
     end
   end
 end
