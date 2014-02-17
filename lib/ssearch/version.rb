@@ -1,3 +1,3 @@
-class Ssearch
+module Ssearch
   VERSION = "0.1.1"
 end

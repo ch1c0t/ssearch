@@ -23,4 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-debugger"
 
   spec.add_runtime_dependency 'redis'
+  spec.add_runtime_dependency 'msgpack'
+  spec.add_runtime_dependency 'daybreak'
 end
