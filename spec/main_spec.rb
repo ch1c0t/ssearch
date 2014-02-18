@@ -1,11 +1,17 @@
 require_relative './helper'
+require 'fileutils'
+
+include Ssearch
+
+foreman_pid = fork { exec "foreman start -d spec" }
+sleep 1
 
 document = Gutenberg::Book.new_from_txt 'spec/data/pg11.txt'
 db_file = 'spec/data/db'
 f = Ssearch::Front.new db_file, document
 
 describe Ssearch do
-  describe Ssearch::Front do
+  describe Front do
     describe 'when query exists' do
       it 'returns corresponding units' do
         f.find('in the middle').must_equal [
@@ -20,13 +26,24 @@ describe Ssearch do
 
     describe 'when query does not exist' do
       it 'returns empty array' do
-        assert f.find('in the use') == []
-        assert f.find('') == []
+        f.find('in the use').must_equal []
+        f.find('').must_equal []
       end
+    end
+  end
+
+  describe Autocomplete do
+    it 'compeletes strings' do
+      ac = Autocomplete.new
+      ac << f
+      ac['in the'].must_equal [["in the same", 3], ["in the other", 3], ["in the last", 3], ["in the wood", 2], ["in the window", 2], ["in the kitchen", 2], ["in the house", 2], ["in the direction", 2]]
     end
   end
 end
 
 MiniTest::Unit.after_tests do
-  File.delete db_file
+  %x! kill #{foreman_pid} !
+  sleep 1
+
+  File.delete db_file, 'spec/dump.rdb'
 end

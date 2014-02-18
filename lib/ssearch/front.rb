@@ -1,5 +1,7 @@
 module Ssearch
   class Front
+    include Enumerable
+
     def initialize path, document,
                    segmenter: -> string { string.split /\s+|\b/ }
       @segmenter = segmenter
@@ -22,6 +24,15 @@ module Ssearch
       else
         []
       end
+    end
+
+    def each &b
+      @reverse_index.map do |ngram, ids|
+        string = MessagePack.unpack(ngram).join ' '
+        size   = MessagePack.unpack(ids).size
+
+        [string, size]
+      end.each &b
     end
 
     private
