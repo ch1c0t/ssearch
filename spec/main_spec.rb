@@ -8,7 +8,7 @@ sleep 1
 
 document = Gutenberg::Book.new_from_txt 'spec/data/pg11.txt'
 db_file = 'spec/data/db'
-f = Ssearch::Front.new db_file, document
+f = Front.new db_file, document
 
 describe Ssearch do
   describe Front do
