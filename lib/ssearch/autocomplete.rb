@@ -8,6 +8,7 @@ module Ssearch
       front.each do |ngram, size|
         @r.zadd ngram[0..2], size, ngram
       end
+      @r.save
     end
 
     def [] string, amount: 8

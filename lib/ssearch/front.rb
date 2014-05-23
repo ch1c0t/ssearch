@@ -39,26 +39,26 @@ module Ssearch
 
     def index document
       @forward_index = document.map { |unit| @segmenter[unit] }
-      reverse_index = {}
-      
+      reverse_index = Hash.new { |hash, key| hash[key] = [] }
+
       @forward_index.each_with_index do |tokens, id|
         tokens.each_cons(2).with_index do |bigram, position|
-          reverse_index[bigram] ||= []
           reverse_index[bigram] << [id, position]
         end
       end
+      
+      reverse_index.select! { |_, occurrences| occurrences.size >= 8 } # a temporal magic number laid here just for speed
 
-      reverse_index.select! { |_, occurrences| occurrences.size >= 8 }
-      reverse_index = reverse_index.each_with_object({}) do |(ngram, occurrences), h|
-          h.merge! (find_ngrams_in occurrences)
-      end.merge reverse_index
-
-
-      @reverse_index = DB.new @path
-      reverse_index.each do |k, v|
-        @reverse_index[k.to_msgpack] = v.map { |id, position| id }.to_msgpack
+      @reverse_index = {}
+      add_ngrams reverse_index
+      persist_reverse_index
+    end
+    
+    def add_ngrams hash
+      ngrams = hash.each_with_object({}) do |(_ngram, occurrences), h|
+        h.merge! (find_ngrams_in occurrences)
       end
-      @reverse_index.flush
+      @reverse_index.merge! ngrams
     end
 
     def find_ngrams_in occurrences, size = 2
@@ -72,6 +72,15 @@ module Ssearch
       end
 
       ngrams.select { |_, occurrences| occurrences.size > 1 }
+    end
+
+    def persist_reverse_index
+      reverse_index = DB.new @path
+      @reverse_index.each do |k, v|
+        reverse_index[k.to_msgpack] = v.map { |id, position| id }.to_msgpack
+      end
+      reverse_index.flush
+      @reverse_index = reverse_index
     end
   end
 end
