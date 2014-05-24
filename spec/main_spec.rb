@@ -9,6 +9,7 @@ sleep 1
 document = Gutenberg::Book.new_from_txt 'spec/data/pg11.txt'
 db_file = 'spec/data/db'
 f = Front.new db_file, document
+r = Redis.new
 
 describe Front do
   describe 'when query exists' do
@@ -43,5 +44,6 @@ MiniTest::Unit.after_tests do
   %x! kill #{foreman_pid} !
   sleep 1
 
+  r.flushall
   File.delete db_file, 'spec/dump.rdb'
 end

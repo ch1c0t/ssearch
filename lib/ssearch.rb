@@ -5,6 +5,7 @@ require 'pathname'
 
 require "ssearch/version"
 require "ssearch/db"
+require "ssearch/manager"
 require "ssearch/front"
 require "ssearch/autocomplete"
 

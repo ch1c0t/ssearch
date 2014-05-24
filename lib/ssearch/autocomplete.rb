@@ -1,12 +1,14 @@
 module Ssearch
   class Autocomplete
-    def initialize port: 6379, db: 0
+    def initialize port: 6379, db: 0, ngrams: nil
       @r = Redis.new port: port, db: db
+      @ngrams = ngrams
     end
 
     def << front
       front.each do |ngram, size|
-        @r.zadd ngram[0..2], size, ngram
+        @r.zincrby ngram[0..2], size, ngram
+        (@ngrams.zadd ngram, size, front.path) if @ngrams
       end
       @r.save
     end

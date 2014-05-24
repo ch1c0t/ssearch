@@ -2,6 +2,8 @@ module Ssearch
   class Front
     include Enumerable
 
+    attr_reader :path
+
     def initialize path, document,
                    segmenter: -> string { string.split /\s+|\b/ }
       @segmenter = segmenter
