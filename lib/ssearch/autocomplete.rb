@@ -8,9 +8,8 @@ module Ssearch
     def << front
       front.each do |ngram, size|
         @r.zincrby ngram[0..2], size, ngram
-        (@ngrams.zadd ngram, size, front.path) if @ngrams
+        (@ngrams.zincrby ngram, size, front.path) if @ngrams
       end
-      @r.save
     end
 
     def [] string, amount: 8

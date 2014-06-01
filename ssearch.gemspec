@@ -23,6 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry-debugger"
   spec.add_development_dependency "foreman"
   spec.add_development_dependency 'awesome_print'
+  spec.add_development_dependency 'wrong'
 
   spec.add_runtime_dependency 'redis'
   spec.add_runtime_dependency 'msgpack'

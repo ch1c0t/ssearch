@@ -25,22 +25,21 @@ module Ssearch
       needed_paths = paths.take_while do |(_path, score)|
         granted_amount += score
         granted_amount < amount
-      end
+      end.map { |path,_score| path }
 
-      needed_path
-        .map do |path, score|
-          @fronts
-            .find { |f| f.path == path }
-            .find string, amount: score
-        end.take amount
+      amount_from_each = (amount/needed_paths.size + 1)
+      needed_paths.map do |path|
+        front = @fronts.find { |f| f.path.to_s == path }
+        front.find string, amount: amount_from_each
+      end.reduce(:+).take amount
     end
+
+    private
 
     def front_paths_which_contain string, with_scores: false
       (@ngrams.zrevrange (preprocess string), 0, -1, with_scores: with_scores)
         .map { |path, score| [path, score.to_i] }
     end
-
-    private
 
     def preprocess string
       @segmenter[string].join ' '
